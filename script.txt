@@ -38,3 +38,5 @@ BƯỚC 6 - Tạo Config token
 python gen_config.py
 
 BƯỚC 7 - TRAIN
+
+Giữ im toàn bộ nội dung, chỉ format lại bố cục rồi xuống dòng hợp lý, nếu sai dấu hãy sửa lại
