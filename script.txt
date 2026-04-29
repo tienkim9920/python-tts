@@ -1,0 +1,40 @@
+1. Install
+https://visualstudio.microsoft.com/visual-cpp-build-tools/
+Chọn Develop with C++ chọn WSP14.3
+python -m venv venv
+venv\Scripts\activate
+python -m pip install --upgrade pip
+pip install imageio-ffmpeg
+
+pip install torch==1.13.1+cu117 torchaudio==0.13.1 \
+--extra-index-url https://download.pytorch.org/whl/cu117
+pip install TTS==0.19.1
+pip install numpy==1.22.0 scipy==1.11.4 librosa==0.10.0 soundfile
+pip install trainer
+
+
+python -m venv whisper-env
+whisper-env\Scripts\activate
+pip install openai-whisper
+
+2. Cắt File audio.mp3 (30 phút)
+BƯỚC 1 – Cắt audio lớn thành nhiều file
+ffmpeg -i audio.mp3 -f segment -segment_time 5 -c copy segment_%03d.mp3
+ffmpeg -i audio.mp3 -t 500 -f segment -segment_time 5 -c copy segment_%03d.mp3
+
+BƯỚC 2 – Convert sang WAV
+for %f in (segment_*.mp3) do ffmpeg -i "%f" -ar 22050 -ac 1 "dataset/wavs/%~nf.wav"
+
+BƯỚC 3 – Tạo metadata tự động
+python gen_metadata.py
+
+BƯỚC 4 – Fix metadata tự động
+python fix_metadata.py
+
+BƯỚC 5 - Xóa file mp3
+del segment_*.mp3
+
+BƯỚC 6 - Tạo Config token
+python gen_config.py
+
+BƯỚC 7 - TRAIN
